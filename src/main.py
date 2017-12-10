@@ -22,7 +22,7 @@ def main():
         data = checker.get_btc_day_market_data('AUD')
         storage.store_record(data)
         # print(data)
-        time.sleep(30)
+        time.sleep(60)
 
 if __name__ == '__main__':
     main()
