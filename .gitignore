@@ -105,3 +105,6 @@ venv.bak/
 
 # pickle
 *.pickle
+
+# sqlite
+*.sqlite

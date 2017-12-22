@@ -5,7 +5,7 @@ from abc import ABCMeta, abstractmethod
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-class BaseClass(object):
+class StorageBase(object):
     __metaclass__ = ABCMeta
 
     @abstractmethod
@@ -16,7 +16,7 @@ class BaseClass(object):
     def get_last_records(self, num_records):
         raise NotImplementedError()
 
-class PickleStorage(BaseClass):
+class PickleStorage(StorageBase):
     def __init__(self, filepath):
         self.pickle_filepath = filepath
     

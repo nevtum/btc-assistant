@@ -3,6 +3,7 @@ import time
 
 from btc_assistant.btc_utils import BTCPriceChecker
 from btc_assistant.storage import PickleStorage
+from btc_assistant.sql_storage import create_database_storage
 
 logging.basicConfig(level=logging.INFO)
 
@@ -17,7 +18,7 @@ def create_price_checker():
 
 def main():
     checker = create_price_checker()
-    storage = create_data_storage()
+    storage = create_database_storage()
     while True:
         data = checker.get_btc_day_market_data('AUD')
         storage.store_record(data)
