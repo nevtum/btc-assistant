@@ -21,7 +21,6 @@ def main():
     while True:
         data = checker.get_btc_day_market_data('AUD')
         storage.store_record(data)
-        # print(data)
         time.sleep(60)
 
 if __name__ == '__main__':
