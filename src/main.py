@@ -4,7 +4,7 @@ import time
 from btc_assistant.btc_utils import BTCPriceChecker
 from btc_assistant.storage import PickleStorage
 from btc_assistant.sql_storage import create_database_storage
-from btc_assistant.stats import StatisticalMeasure
+from btc_assistant.stats import MovingAverage
 
 logging.basicConfig(level=logging.INFO)
 
@@ -20,22 +20,22 @@ def create_price_checker():
 MAX_RECORDS = 10
 
 def main():
-    stat = StatisticalMeasure()
     checker = create_price_checker()
     storage = create_database_storage()
     sample_data = storage.get_last_records(MAX_RECORDS)
-    sample_data = list(map(lambda r: r.last_price, sample_data))
+    sample_data = map(lambda r: r.last_price, sample_data)
+    stat2 = MovingAverage(list(sample_data), MAX_RECORDS)
 
     while True:
         data = checker.get_btc_day_market_data('AUD')
         storage.store_record(data)
-        sample_data.append(data.last_price)
-        if len(sample_data) > MAX_RECORDS:
-            sample_data.pop(0)
+        stat2.take_measurement(data.last_price)
         print("timestamp: %s" % data.timestamp)
-        print("%i minute average price: %f" % (len(sample_data), stat.average(sample_data)))
-        print("std-dev: %f" % stat.std_deviation(sample_data))
-        print("current price: %f" % data.last_price)
+        print("%i minute average price: %.2f" % (len(stat2), stat2.average()))
+        print("pct changed: {:.2f}%".format(stat2.pct_change()))
+        print("std-dev: %.2f" % stat2.std_deviation())
+        print("current price: %.2f" % data.last_price)
+        print()
         time.sleep(60)
 
 if __name__ == '__main__':
