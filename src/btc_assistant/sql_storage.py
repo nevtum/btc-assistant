@@ -17,10 +17,31 @@ class BTCRecord(Base):
     source = Column(String(100))
 
     def __repr__(self):
-        return "{}(btc_price={}".format(self.__class__.__name__, self.price)
+        return "{}(btc_price={})".format(self.__class__.__name__, self.price)
 
+class BTCDomainRecord:
+    def __init__(self, db_object):
+        self.data = db_object
+    
+    @property
+    def timestamp(self):
+        return self.data.timestamp
+
+    @property
+    def last_price(self):
+        return self.data.price
+
+    @property
+    def volume(self):
+        return self.data.volume
+
+    def __repr__(self):
+        return "{}(id={} btc_price={})".format(
+            self.__class__.__name__, self.data.id, self.data.price
+        )
+    
 filename = "btc_data.sqlite"
-engine = create_engine("sqlite:///%s" % filename, echo=True)
+engine = create_engine("sqlite:///%s" % filename, echo=False)
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 
@@ -45,6 +66,7 @@ class DatabaseStorage(StorageBase):
         self.session.commit()
 
     def get_last_records(self, num_records):
-        db_records = session.query(BTCRecord).limit(num_records)
-        records = []
-        import pdb; pdb.set_trace()
+        db_records = self.session.query(BTCRecord).order_by(BTCRecord.id.desc()).limit(num_records)
+        objs = map(lambda r: BTCDomainRecord(r), db_records)
+        ordered = reversed(list(objs))
+        return list(ordered)
