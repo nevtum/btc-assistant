@@ -1,11 +1,32 @@
 import unittest
+
+from btc_assistant.app import (BTCAssistant, RequestCurrentPrice,
+                               RequestPriceMovingAverage)
 from btc_assistant.storage import StorageBase
 
+
 def parse_input(text):
-    return text
+    if text == "BTC price":
+        return RequestCurrentPrice("BTC")
+    elif text == "BTC ma 10m":
+        return RequestPriceMovingAverage("BTC", "m", 10)
 
 class InMemoryStorage(StorageBase):
-    pass
+    def __init__(self, records):
+        self.records = records
+
+    def get_last_records(self, num_records):
+        return self.records[-num_records:]
+
+    def store_record(self, record):
+        self.records.append(record)
+
+class PriceRecord:
+    def __init__(self, price):
+        self.last_price = price
+    
+    def __repr__(self):
+        return "{}(price={})".format(self.__class__.__name__, self.last_price)
 
 class MockPresenter:
     def __init__(self):
@@ -14,20 +35,21 @@ class MockPresenter:
     def display(self, text):
         self.output = text
 
-class BTCAssistant:
-    def __init__(self, storage, presenter):
-        self.storage = storage
-        self.presenter = presenter
-
-    def process(self, command):
-        if command == "BTC price":
-            self.presenter.display("BTCAUD: $17574.00, Change: (+0.350%)")
-        elif command == "BTC ma 10m":
-            self.presenter.display("BTCAUD: $16500.00, Change: (-0.074%)")
-
 class TestCommands(unittest.TestCase):
     def setUp(self):
-        self.storage = InMemoryStorage()
+        records = [
+            PriceRecord(18166.50),
+            PriceRecord(10146.92),
+            PriceRecord(15322.00),
+            PriceRecord(17729.95),
+            PriceRecord(13567.18),
+            PriceRecord(18113.63),
+            PriceRecord(18113.63),
+            PriceRecord(18166.50),
+            PriceRecord(17451.80),
+            PriceRecord(17574.00),
+        ]
+        self.storage = InMemoryStorage(records)
         self.presenter = MockPresenter()
         self.assistant = BTCAssistant(self.storage, self.presenter)
 
@@ -39,7 +61,7 @@ class TestCommands(unittest.TestCase):
     def test_get_btc_market_price_command_10min_moving_average(self):
         command = parse_input("BTC ma 10m")
         self.assistant.process(command)
-        self.assertEqual(self.presenter.output, "BTCAUD: $16500.00, Change: (-0.074%)")
+        self.assertEqual(self.presenter.output, "BTCAUD: $16242.85, Change: (-0.404%)")
 
     @unittest.SkipTest
     def test_submit_price_notification(self):
