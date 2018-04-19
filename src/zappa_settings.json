@@ -4,6 +4,10 @@
         "app_function": "index.lambda_handler",
         "project_name": "btc-assistant",
         "runtime": "python3.6",
-        "s3_bucket": "btc-assistant"
+        "s3_bucket": "btc-assistant",
+        "events": [{
+            "function": "index.lambda_handler", 
+            "expression": "rate(1 minute)"
+        }]
     }
 }
