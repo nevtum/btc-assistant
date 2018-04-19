@@ -29,7 +29,7 @@ def save_to_db(data):
     )
     logger.info("Consumed capacity: {}".format(resp["ConsumedCapacity"]))
 
-def handler(event, context):
+def lambda_handler(event, context):
     price_checker = BTCPriceChecker()
     logger.debug("Getting BTC market data from Independent Reserve...")
     data = price_checker.get_btc_day_market_data("AUD")
