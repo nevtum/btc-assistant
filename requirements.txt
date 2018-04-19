@@ -1,5 +1,5 @@
 requests
 python-dateutil
 sqlalchemy
-
+boto3
 
