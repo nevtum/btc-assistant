@@ -8,16 +8,18 @@ from btc_assistant.storage import FakeStorage
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-PRODUCTION_DB = environ.get("PRODUCTION_DB", False)
+ENVIRONMENT = environ.get("ENVIRONMENT", "TEST")
 
 def create_price_checker():
     return BTCPriceChecker()
 
 def create_storage():
-    logger.info("Environment variable PRODUCTION_DB is set to {}!".format(PRODUCTION_DB))        
-    if PRODUCTION_DB:
+    logger.info("Environment variable ENVIRONMENT is set to {}!".format(ENVIRONMENT))        
+    if ENVIRONMENT == "PROD":
         logger.warning("Production database DynamoDB is instantiated!")        
         return DynamoDB()
-    else:
-        logger.info("Set PRODUCTION_DB environment variable to True to use DynamoDB!")
+    elif ENVIRONMENT == "TEST":
+        logger.info("Set ENVIRONMENT environment variable to PROD to use DynamoDB!")
         return FakeStorage()
+    else:
+        raise EnvironmentError("Unknown environment set!")
