@@ -1,9 +1,13 @@
 
 import json
+import logging
 
 from dateutil import parser
 
 from .http_utils import RESTClient
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 root_api = "https://api.independentreserve.com"
 
@@ -16,10 +20,12 @@ class IndependentReserveUrls:
 
 class BTCPriceChecker:
     def get_btc_day_market_data(self, currency_code):
+        logger.debug("Getting BTC market data from Independent Reserve...")
         if currency_code.lower() not in ['aud', 'usd']:
             raise AttributeError("Must specify either 'aud' or 'usd' currency code")
         url = IndependentReserveUrls.market_data_url('xbt', currency_code.lower())
         a_dict = RESTClient.get(url).json()
+        logger.info("Data retrieved: {}".format(a_dict))    
         return BTCDayMarketData(a_dict)
 
 class BTCDayMarketData:
