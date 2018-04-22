@@ -56,7 +56,7 @@ class TestCommands(unittest.TestCase):
     def test_get_btc_market_price_command(self):
         command = parse_input("BTC price")
         self.assistant.process(command)
-        self.assertEqual(self.presenter.output, "BTCAUD: $17574.00, Change: (+0.350%)")
+        self.assertEqual(self.presenter.output, "BTCAUD: $17574.00, Change: (+0.700%)")
     
     def test_get_btc_market_price_command_10min_moving_average(self):
         command = parse_input("BTC ma 10m")
