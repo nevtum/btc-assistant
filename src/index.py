@@ -1,15 +1,9 @@
-
-import logging
 from os import environ
 
 import factory
+from btc_assistant.log import get_logger
 
-LOGLEVEL = environ.get("LOGLEVEL", "INFO")
-
-logging.basicConfig(level=LOGLEVEL)
-logging.getLogger('botocore.vendored').setLevel(logging.WARNING)
-logger = logging.getLogger(__name__)
-logger.setLevel(LOGLEVEL)
+logger = get_logger(__name__)
 
 def lambda_handler(event, context):
     logger.debug("Event payload: {}".format(event))

@@ -1,13 +1,11 @@
-
 import json
-import logging
 
 from dateutil import parser
 
 from .http_utils import RESTClient
+from .log import get_logger
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger = get_logger(__name__)
 
 root_api = "https://api.independentreserve.com"
 

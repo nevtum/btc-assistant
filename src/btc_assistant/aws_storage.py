@@ -1,10 +1,9 @@
-import logging
-
 import boto3
+
+from .log import get_logger
 from .storage import StorageBase
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger = get_logger(__name__)
 
 class DynamoDB(StorageBase):
     def store_record(self, data):

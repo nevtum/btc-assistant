@@ -1,10 +1,10 @@
-import logging
-
 import requests
+
 from urllib3.exceptions import HTTPError
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+from .log import get_logger
+
+logger = get_logger(__name__)
 
 class RESTClient:
     default_timeout = 10
