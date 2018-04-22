@@ -30,7 +30,10 @@ class BTCAssistant:
     def _handle_request_ma(self, command):
         sample_data = self.storage.get_last_records(command.total_ticks + 1)
         data = sample_data[-1]
-        price_data = map(lambda r: r.last_price, sample_data[:-1])
+        previous_samples = sample_data[:-1]
+        if len(previous_samples) == 0:
+            previous_samples = [data]
+        price_data = map(lambda r: r.last_price, previous_samples)
         price_stat = MovingAverage(list(price_data), 2)
         price_stat.take_measurement(data.last_price)
 

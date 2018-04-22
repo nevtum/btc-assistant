@@ -1,25 +1,20 @@
-import logging
 import time
 
 from btc_assistant.btc_utils import BTCPriceChecker
-from btc_assistant.sql_storage import create_database_storage
 from btc_assistant.stats import MovingAverage
-
-logging.basicConfig(level=logging.INFO)
-
-def create_price_checker():
-    return BTCPriceChecker()
+import factory
 
 MAX_RECORDS = 10
 
 def write_btc_data():
-    checker = create_price_checker()
-    storage = create_database_storage()
+    checker = factory.create_price_checker()
+    storage = factory.create_storage()
     data = checker.get_btc_day_market_data('AUD')
     storage.store_record(data)
 
 def read_statistics():
-    storage = create_database_storage()
+    import pdb; pdb.set_trace()
+    storage = factory.create_storage()
     sample_data = storage.get_last_records(MAX_RECORDS + 1)
     data = sample_data[-1]
     price_data = map(lambda r: r.last_price, sample_data[:-1])

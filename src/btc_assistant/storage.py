@@ -11,13 +11,12 @@ class StorageBase(object):
     def get_last_records(self, num_records):
         raise NotImplementedError()
 
+class InMemoryStorage(StorageBase):
+    def __init__(self, records=[]):
+        self.records = records
 
-class FakeStorage(StorageBase):
-    def __init__(self):
-        self.records = []
+    def get_last_records(self, num_records):
+        return self.records[-num_records:]
 
     def store_record(self, record):
         self.records.append(record)
-    
-    def get_last_records(self, num_records):
-        raise NotImplementedError("To do!")
