@@ -4,6 +4,7 @@ from os import environ
 from btc_assistant.aws_storage import DynamoDB
 from btc_assistant.btc_utils import BTCPriceChecker
 from btc_assistant.storage import InMemoryStorage
+from btc_assistant.app import BTCAssistant
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -26,3 +27,10 @@ def create_storage():
         return _in_memory_storage
     else:
         raise EnvironmentError("Unknown environment set!")
+
+def create_btc_assistant():
+    class ConsolePresenter:
+        def display(self, text):
+            logger.info(text)
+    
+    return BTCAssistant(create_storage(), ConsolePresenter())
