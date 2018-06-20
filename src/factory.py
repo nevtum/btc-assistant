@@ -21,7 +21,7 @@ def create_storage():
     logger.info("Environment variable ENVIRONMENT is set to {}!".format(ENVIRONMENT))        
     if ENVIRONMENT == "PROD":
         logger.warning("Production database DynamoDB is instantiated!")        
-        return DynamoDB()
+        return DynamoDB('crypto-market-data')
     elif ENVIRONMENT == "TEST":
         logger.info("Set ENVIRONMENT environment variable to PROD to use DynamoDB!")
         return _in_memory_storage

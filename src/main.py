@@ -22,5 +22,11 @@ def main():
         assistant.process(command)
         time.sleep(60)
 
+def main2():
+    from btc_assistant.aws_storage import DynamoDB
+    storage = DynamoDB('crypto-market-data')
+    for data in storage.enumerate_records("BTC"):
+        print(data)
+
 if __name__ == '__main__':
-    main()
+    main2()

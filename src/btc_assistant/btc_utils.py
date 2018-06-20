@@ -23,12 +23,13 @@ class BTCPriceChecker:
             raise AttributeError("Must specify either 'aud' or 'usd' currency code")
         url = IndependentReserveUrls.market_data_url('xbt', currency_code.lower())
         a_dict = RESTClient.get(url).json()
-        logger.info("Data retrieved: {}".format(a_dict))    
+        logger.info("Data retrieved: {}".format(a_dict))
         return BTCDayMarketData(a_dict)
 
 class BTCDayMarketData:
     def __init__(self, a_dict):
         self.data = a_dict
+        self.url = 'www.independentreserve.com'
     
     @property
     def timestamp(self):
