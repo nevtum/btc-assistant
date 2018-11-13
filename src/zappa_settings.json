@@ -11,5 +11,22 @@
             "function": "index.lambda_handler", 
             "expression": "rate(1 minute)"
         }]
+    },
+    "staging": {
+        "aws_region": "ap-southeast-2",
+        "app_function": "index.lambda_handler",
+        "project_name": "btc-assistant-staging",
+        "runtime": "python3.6",
+        "s3_bucket": "btc-assistant-staging",
+        "memory_size": 128,
+        "keep_warm": false,
+        "environment_variables": {
+            "ENVIRONMENT": "STAGING"
+        },
+        "events": [{
+            "function": "index.lambda_handler", 
+            "expression": "rate(1 minute)"
+        }]
+        
     }
 }

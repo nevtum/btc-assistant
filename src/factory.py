@@ -18,10 +18,13 @@ def create_price_checker():
 _in_memory_storage = InMemoryStorage()
 
 def create_storage():
-    logger.info("Environment variable ENVIRONMENT is set to {}!".format(ENVIRONMENT))        
+    logger.info("Environment variable ENVIRONMENT is set to {}!".format(ENVIRONMENT))
     if ENVIRONMENT == "PROD":
-        logger.warning("Production database DynamoDB is instantiated!")        
+        logger.warning("Production database DynamoDB is instantiated!")
         return DynamoDB('crypto-market-data')
+    elif ENVIRONMENT == "STAGING":
+        logger.warning("Staging database DynamoDB is instantiated!")
+        return DynamoDB('crypto-market-data-staging')
     elif ENVIRONMENT == "TEST":
         logger.info("Set ENVIRONMENT environment variable to PROD to use DynamoDB!")
         return _in_memory_storage
