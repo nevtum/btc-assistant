@@ -10,7 +10,7 @@ or
     $ zappa deploy staging
 
 Next set up a DynamoDB table named "crypto-market-data".
-Create a partition key called 'currency_code' (String) and a sort key called 'utc_timestamp' (Number).
+Create a partition key called 'currency_code' (String) and a sort key called 'utc_timestamp' (String).
 Set up policies in the lambda IAM execution role to gain access to the newly created DB.
 
 There are a few environment variables that may require configuration for proper usage:
