@@ -3,8 +3,6 @@ from sqlalchemy import (Column, DateTime, Float, ForeignKey, Integer, String,
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-from .storage import StorageBase
-
 Base = declarative_base()
 
 class BTCRecord(Base):
@@ -49,7 +47,7 @@ def create_database_storage():
     session = Session()
     return DatabaseStorage(session, "Independent Reserve")
     
-class DatabaseStorage(StorageBase):
+class DatabaseStorage:
     def __init__(self, session, data_source):
         self.session = session
         self.data_source = data_source

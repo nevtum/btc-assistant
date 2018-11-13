@@ -5,7 +5,9 @@ Use Python's zappa to deploy lambda application to AWS. You will need an AWS acc
 
     $ zappa deploy production
 
-Next set up a DynamoDB table named "crypto-market-data". Set up policies in the lambda IAM execution role to gain access to the newly created DB.
+Next set up a DynamoDB table named "crypto-market-data".
+Create a partition key called 'currency_code' and a sort key called 'utc_timestamp'.
+Set up policies in the lambda IAM execution role to gain access to the newly created DB.
 
 There are a few environment variables that may require configuration for proper usage:
 
