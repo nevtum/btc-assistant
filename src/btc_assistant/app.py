@@ -17,14 +17,9 @@ class BTCAssistant:
         assert(len(sample_data) > 0)
         data = sample_data[-1]
         prev_data = sample_data[-2]
-        change = (data.last_price / prev_data.last_price - 1) * 100
+        pct_change = (data.last_price / prev_data.last_price - 1) * 100
 
-        sign = "+"
-        if change < 0:
-            sign = ""
-        message = "{}AUD: ${:.2f}, Change: ({}{:.3f}%)".format(
-            command.code, data.last_price, sign, change
-        )
+        message = self._format_message(f"{command.code}AUD", data.last_price, pct_change)
         self.presenter.display(message)
 
     def _handle_request_ma(self, command):
@@ -37,17 +32,16 @@ class BTCAssistant:
         price_stat = MovingAverage(list(price_data), 2)
         price_stat.take_measurement(data.last_price)
 
-        sign = "+"
-        if price_stat.pct_change() < 0:
-            sign = ""
-        message = "{}AUD: ${:.2f}, Change: ({}{:.3f}%)".format(
-            command.code, price_stat.average(), sign, price_stat.pct_change()
-        )
+        message = self._format_message(f"{command.code}AUD", price_stat.average(), price_stat.pct_change())
         self.presenter.display(message)
+    
+    def _format_message(self, currency_pair, price, pct_change):
+        sign = "" if pct_change < 0 else "+"
+        return f"{currency_pair}: ${price:.2f}, Change: ({sign}{pct_change:.3f}%)"
 
     def process(self, command):
         try:
             func = self.handlers[command.__class__.__name__]
+            return func(command)
         except IndexError as e:
             raise IndexError("No handler found for {}".format(command.__class__.__name__))
-        func(command)
