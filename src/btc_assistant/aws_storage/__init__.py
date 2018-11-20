@@ -1,1 +1,1 @@
-from .core import DynamoDB
+from .utils import DynamoDB

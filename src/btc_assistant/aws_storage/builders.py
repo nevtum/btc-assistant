@@ -1,21 +1,41 @@
-from collections import deque
+from datetime import datetime
 
-import boto3
+class CryptoDynamoWriteRecordBuilder:
+    def __init__(self, table_name):
+        self.table_name = table_name
+    
+    def at_timestamp(self, timestamp):
+        self.timestamp = timestamp
+        return self
+    
+    def price(self, value):
+        self.price = value
+        return self
+    
+    def volume(self, value):
+        self.volume = value
+        return self
+    
+    def from_source(self, url):
+        self.url = url
+        return self
 
-from ..log import get_logger
+    def build_put_kwargs(self):
+        assert(isinstance(self.timestamp, datetime))
+        assert(self.price >= 0)
+        assert(self.volume >= 0)
+        return {
+            'TableName': self.table_name,
+            'Item': {
+                'utc_timestamp': { 'S': self.timestamp.isoformat() },
+                'currency_code': { 'S': 'BTC' },
+                'price': { 'S':  str(self.price) },
+                'volume': { 'S': str(self.volume) },
+                'url': { 'S': self.url }
+            }
+        }
 
-logger = get_logger(__name__)
-
-_client = boto3.client("dynamodb")
-
-def execute_query(query_builder):
-    kwargs = query_builder.build_query_kwargs()
-    logger.info(kwargs)
-    resp = _client.query(**kwargs)
-    logger.info("Consumed capacity: {}".format(resp["ConsumedCapacity"]))
-    return resp
-
-class CryptoQueryBuilder:
+class CryptoDynamoQueryBuilder:
     def __init__(self, table_name):
         self.table_name = table_name
         self.item_limit = 500
@@ -77,30 +97,3 @@ class CryptoQueryBuilder:
         if self.end_datetime:
             query_exp[':t2'] = { 'S': self.end_datetime.isoformat() }
         return query_exp
-
-class DynamoItemsIterator:
-    def __init__(self, query_builder):
-        self.query_builder = query_builder
-        self.no_more_records = False
-        self.buffer = deque()
-
-    def _fetch_next_records(self):
-        resp = execute_query(self.query_builder)
-        if 'LastEvaluatedKey' in resp:
-            logger.debug("There is more data to retrieve!")
-            self.query_builder.with_last_key_evaluated(resp['LastEvaluatedKey'])
-        else:
-            self.no_more_records = True
-        return resp.get('Items', [])
-    
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        if len(self.buffer) > 0:
-            return self.buffer.popleft()
-
-        if self.no_more_records:
-            raise StopIteration("No more records!")
-
-        self.buffer = deque(self._fetch_next_records())
