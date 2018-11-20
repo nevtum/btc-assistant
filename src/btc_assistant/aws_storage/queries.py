@@ -9,7 +9,9 @@ logger = get_logger(__name__)
 _client = boto3.client("dynamodb")
 
 def execute_query(query_builder):
-    resp = _client.query(**query_builder.build_query_kwargs())
+    kwargs = query_builder.build_query_kwargs()
+    logger.info(kwargs)
+    resp = _client.query(**kwargs)
     logger.info("Consumed capacity: {}".format(resp["ConsumedCapacity"]))
     return resp
 
@@ -20,6 +22,10 @@ class CryptoQueryBuilder:
         self.last_eval_key = None
         self.start_datetime = None
         self.end_datetime = None
+    
+    def set_batch_size_to(self, batch_size):
+        self.item_limit = batch_size
+        return self
 
     def since(self, start_datetime):
         self.start_datetime = start_datetime

@@ -4,6 +4,7 @@ from dateutil import parser
 
 from .http_utils import RESTClient
 from .log import get_logger
+from .responses import BitcoinMarketData
 
 logger = get_logger(__name__)
 
@@ -24,33 +25,9 @@ class BTCPriceChecker:
         url = IndependentReserveUrls.market_data_url('xbt', currency_code.lower())
         a_dict = RESTClient.get(url).json()
         logger.info("Data retrieved: {}".format(a_dict))
-        return BTCDayMarketData(a_dict)
-
-class BTCDayMarketData:
-    def __init__(self, a_dict):
-        self.data = a_dict
-        self.url = 'www.independentreserve.com'
-    
-    @property
-    def timestamp(self):
-        return parser.parse(self.data['CreatedTimestampUtc'])
-
-    @property
-    def last_price(self):
-        return self.data['LastPrice']
-
-    @property
-    def volume(self):
-        return self.data['DayVolumeXbt']
-    
-    @property
-    def raw_data(self):
-        return self.data
-
-    def __repr__(self):
-        return "{}(timestamp={} price_btc={} volume={})".format(
-            self.__class__.__name__,
-            self.timestamp,
-            self.last_price,
-            self.volume
+        return BitcoinMarketData(
+            timestamp=parser.parse(a_dict['CreatedTimestampUtc']),
+            price=a_dict['LastPrice'],
+            volume=a_dict['DayVolumeXbt'],
+            url="www.independentreserve.com"
         )
