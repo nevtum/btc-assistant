@@ -39,7 +39,6 @@ class CryptoDynamoQueryBuilder:
     def __init__(self, table_name):
         self.table_name = table_name
         self.item_limit = 500
-        self.last_eval_key = None
         self.start_datetime = None
         self.end_datetime = None
     
@@ -59,10 +58,6 @@ class CryptoDynamoQueryBuilder:
         self.currency_code = currency_code
         return self
 
-    def with_last_key_evaluated(self, a_dict):
-        self.last_eval_key = a_dict
-        return self
-
     def build_query_kwargs(self):
         args = {
             'TableName': self.table_name,
@@ -72,8 +67,6 @@ class CryptoDynamoQueryBuilder:
             'KeyConditionExpression': self._build_key_condition_expression(),
             'ExpressionAttributeValues': self._build_expression_attributes(),
         }
-        if self.last_eval_key:
-            args['ExclusiveStartKey'] = self.last_eval_key
         return args
 
     def _build_key_condition_expression(self):
