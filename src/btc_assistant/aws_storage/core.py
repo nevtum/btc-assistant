@@ -26,5 +26,10 @@ class DynamoDB:
         logger.info("Consumed capacity: {}".format(resp["ConsumedCapacity"]))
 
     def enumerate_records(self, currency_code, start_datetime=None, end_datetime=None):
-        builder = CryptoQueryBuilder(self.table_name).with_crypto_code('BTC')
+        builder = (
+            CryptoQueryBuilder(self.table_name)
+            .with_crypto_code(currency_code)
+            .since(start_datetime)
+            .until(end_datetime)
+        )
         return DynamoItemsIterator(builder)

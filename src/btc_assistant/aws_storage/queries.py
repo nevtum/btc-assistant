@@ -53,15 +53,24 @@ class CryptoQueryBuilder:
     def _build_key_condition_expression(self):
         base_query = 'currency_code = :sym'
         if self.start_datetime and self.end_datetime:
-            return '{} AND utc_timestamp BETWEEN :t1 AND :t2'.format(base_query)
+            return f'{base_query} AND utc_timestamp BETWEEN :t1 AND :t2'
+        else if self.start_datetime and not self.end_datetime:
+            return f'{base_query} AND utc_timestamp GE :t1'
+        else if not self.start_datetime and self.end_datetime:
+            return f'{base_query} AND utc_timestamp LE :t2'
         return base_query
 
     def _build_expression_attributes(self):
-        return {
+        query_exp = {
             ':sym': {
                 'S': self.currency_code,
             }
         }
+        if self.start_datetime:
+            query_exp[':t1'] = { 'S': self.start_datetime }
+        if self.end_datetime:
+            query_exp[':t2'] = { 'S': self.end_datetime }
+        return query_exp
 
 class DynamoItemsIterator:
     def __init__(self, query_builder):
