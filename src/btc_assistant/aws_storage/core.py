@@ -1,3 +1,5 @@
+from collections import deque
+
 import boto3
 
 from ..log import get_logger
