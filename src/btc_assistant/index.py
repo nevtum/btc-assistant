@@ -1,7 +1,7 @@
 from os import environ
 
 import factory
-from btc_assistant.log import get_logger
+from log import get_logger
 
 logger = get_logger(__name__)
 

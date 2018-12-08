@@ -1,10 +1,10 @@
 import logging
 from os import environ
 
-from btc_assistant.aws_storage import DynamoDB
-from btc_assistant.btc_utils import BTCPriceChecker
-from btc_assistant.storage import InMemoryStorage
-from btc_assistant.app import BTCAssistant
+from analysis import BTCAssistant
+from infrastructure.dynamodb import DynamoDB
+from infrastructure.network import BTCPriceChecker
+from infrastructure.storage import InMemoryStorage
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)

@@ -1,8 +1,8 @@
 import unittest
 
-from btc_assistant.app import (BTCAssistant, RequestCurrentPrice,
-                               RequestPriceMovingAverage)
-from btc_assistant.storage import InMemoryStorage
+from analysis import (BTCAssistant, RequestCurrentPrice,
+                      RequestPriceMovingAverage)
+from infrastructure.storage import InMemoryStorage
 
 
 def parse_input(text):

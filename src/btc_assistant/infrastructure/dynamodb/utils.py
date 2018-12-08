@@ -1,8 +1,7 @@
-from collections import deque
+from log import get_logger
 
-from ..log import get_logger
 from .builders import CryptoDynamoQueryBuilder, CryptoDynamoWriteRecordBuilder
-from .core import execute_insert, DynamoQueryPaginator
+from .core import DynamoQueryPaginator, execute_insert
 
 logger = get_logger(__name__)
 

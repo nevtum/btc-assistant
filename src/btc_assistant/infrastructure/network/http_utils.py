@@ -1,8 +1,6 @@
 import requests
-
+from log import get_logger
 from urllib3.exceptions import HTTPError
-
-from .log import get_logger
 
 logger = get_logger(__name__)
 

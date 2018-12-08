@@ -1,5 +1,5 @@
 requests==2.18.4
 python-dateutil==2.6.1
 boto3==1.7.6
-sqlalchemy
+sqlalchemy==1.2.14
 zappa==0.45.1

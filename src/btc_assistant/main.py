@@ -1,8 +1,7 @@
 import time
 
-from btc_assistant.btc_utils import BTCPriceChecker
-from btc_assistant.stats import MovingAverage
 import factory
+from infrastructure.network import BTCPriceChecker
 
 MAX_RECORDS = 10
 
@@ -13,7 +12,7 @@ def write_btc_data():
     storage.store_record(data)
 
 def main():
-    from btc_assistant.commands import RequestPriceMovingAverage
+    from analysis import RequestPriceMovingAverage
     command = RequestPriceMovingAverage("BTC", "m", 10)
     assistant = factory.create_btc_assistant()
 
@@ -23,7 +22,7 @@ def main():
         time.sleep(60)
 
 def main2():
-    from btc_assistant.aws_storage import DynamoDB
+    from infrastructure.dynamodb import DynamoDB
     storage = DynamoDB('crypto-market-data')
     for data in storage.enumerate_records("BTC"):
         print(data)

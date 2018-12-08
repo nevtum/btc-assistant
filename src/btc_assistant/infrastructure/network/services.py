@@ -1,21 +1,13 @@
 import json
 
 from dateutil import parser
+from log import get_logger
 
 from .http_utils import RESTClient
-from .log import get_logger
 from .responses import BitcoinMarketData
+from .urls import IndependentReserveUrls
 
 logger = get_logger(__name__)
-
-root_api = "https://api.independentreserve.com"
-
-class IndependentReserveUrls:
-    @staticmethod
-    def market_data_url(primary_currency_code, secondary_currency_code):
-        return "{}/Public/GetMarketSummary?primaryCurrencyCode={}&secondaryCurrencyCode={}".format(
-            root_api, primary_currency_code, secondary_currency_code
-        )
 
 class BTCPriceChecker:
     def get_btc_day_market_data(self, currency_code):
