@@ -1,7 +1,6 @@
-from api import configure_api
-from application import configure_app
 from config import FlaskConfig
 from flask import Flask
+from presentation import configure_api, configure_app
 
 
 def create_app(namespace):
