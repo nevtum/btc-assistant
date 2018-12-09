@@ -1,6 +1,27 @@
-from .builders import CryptoDynamoExpressionBuilder, QueryBuilder
+from datetime import datetime
+
 from config import CRYPTO_TIMESERIES_INDEX_NAME, DYNAMODB_TABLE_NAME
+
+from .builders import CryptoDynamoExpressionBuilder, QueryBuilder
 from .core import execute_query
+from dateutil import parser
+
+class BitcoinPriceDTO:
+    def __init__(self, a_dict):
+        self.data = a_dict
+
+    @property
+    def utc_timestamp(self):
+        datetime_str = self.data["utc_timestamp"]["S"]
+        return parser.parse(datetime_str)
+
+    @property
+    def value(self):
+        return self.data["price"]["S"]
+
+    @property
+    def volume(self):
+        return self.data["volume"]["S"]
 
 class CryptoMarketDataGateway:
     def __init__(self, table_name, index_name):
@@ -19,4 +40,5 @@ class CryptoMarketDataGateway:
             .build_query_kwargs()
         )
         resp = execute_query(**kwargs)
-        return resp
+        dtos = map(lambda a_dict: BitcoinPriceDTO(a_dict), resp["Items"])
+        return list(dtos)
