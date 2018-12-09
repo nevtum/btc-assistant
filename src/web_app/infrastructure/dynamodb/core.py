@@ -9,7 +9,7 @@ logger.setLevel(logging.INFO)
 _client = boto3.client("dynamodb")
 
 def execute_query(**kwargs):
-    logger.info(kwargs)
+    logger.debug(f"kwargs => {kwargs}")
     resp = _client.query(**kwargs)
     logger.info("Consumed capacity: {}".format(resp["ConsumedCapacity"]))
     return resp
