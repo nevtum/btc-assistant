@@ -1,4 +1,7 @@
-APP_ENVIRONMENT = "local"
+from . import log
+from .common import *
+
+APP_ENVIRONMENT = "local" # TODO: change to environment variable
 
 if APP_ENVIRONMENT == "local":
     from .local import *
