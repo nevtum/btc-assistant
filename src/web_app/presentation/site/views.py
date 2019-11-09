@@ -1,6 +1,6 @@
 from . import router
 
 
-@router.get("/test")
+@router.get("/")
 async def index():
     return "Hi!"
