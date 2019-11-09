@@ -1,5 +1,6 @@
-from . import bp as app
+from . import router
 
-@app.route("/")
-def index():
+
+@router.get("/test")
+async def index():
     return "Hi!"
