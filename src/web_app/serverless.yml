@@ -1,0 +1,32 @@
+service: btc-assistant-api
+
+provider:
+  name: aws
+  runtime: python3.7
+  region: ${opt:region, 'ap-southeast-2'}
+  stage: ${opt:stage, 'test'}
+  environment:
+    REGION: ${self:provider.region}
+
+custom:
+  pythonRequirements:
+    dockerizePip: non-linux
+
+package:
+  exclude:
+    - node_modules/**
+    - venv/**
+    - .direnv/**
+
+
+functions:
+  app:
+    handler: handler.lambda_handler
+    events:
+      - http: ANY /
+      - http:
+          path: /{proxy+}
+          method: ANY
+
+plugins:
+  - serverless-python-requirements
