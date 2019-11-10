@@ -1,12 +1,12 @@
 import uvicorn
 from fastapi import FastAPI
 
+from config import DEBUG
 from presentation import configure_api, configure_app
 
 
 def create_app():
-    app = FastAPI(debug=True)
-    # app.config.from_object(FlaskConfig)
+    app = FastAPI(debug=DEBUG)
 
     configure_app(app)
     configure_api(app)
