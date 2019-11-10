@@ -1,1 +1,0 @@
-* Modify config to use starlette.config
