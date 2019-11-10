@@ -17,4 +17,5 @@ app = create_app()
 
 
 if __name__ == "__main__":
-    uvicorn.run("__main__:app", port=5000, reload=True)
+    uvicorn.run(app, port=5000)
+    # uvicorn.run("__main__:app", port=5000, reload=True)

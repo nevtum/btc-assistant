@@ -3,6 +3,5 @@ python-dateutil==2.6.1
 boto3==1.7.6
 sqlalchemy==1.2.14
 zappa==0.47.1
-marshmallow==2.16.3
 fastapi==0.42.0
 uvicorn==0.10.3
