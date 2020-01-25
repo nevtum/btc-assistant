@@ -1,0 +1,29 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  sam-app
+
+  Sample SAM Template for sam-app
+
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+  CryptoAPIFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: web_app/
+      Handler: handler.lambda_handler
+      Runtime: python3.8
+      Events:
+        CryptoAPIRoot:
+          Type: Api
+          Properties:
+            Path: /
+            Method: all
+        CryptoAPI:
+          Type: Api
+          Properties:
+            Path: /{+proxy}
+            Method: all
