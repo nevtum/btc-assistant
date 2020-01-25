@@ -1,4 +1,3 @@
-import uvicorn
 from fastapi import FastAPI
 
 from config import DEBUG
@@ -17,5 +16,6 @@ app = create_app()
 
 
 if __name__ == "__main__":
+    import uvicorn
     uvicorn.run(app, port=5000)
     # uvicorn.run("__main__:app", port=5000, reload=True)
