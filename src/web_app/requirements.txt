@@ -2,5 +2,4 @@ requests==2.18.4
 python-dateutil==2.6.1
 boto3==1.7.6
 fastapi==0.42.0
-uvicorn==0.10.3
 mangum==0.6.17
