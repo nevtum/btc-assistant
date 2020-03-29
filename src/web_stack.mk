@@ -3,7 +3,9 @@ ACTIVATE_CMD = source $(VIRTUALENV_HOME)/bin/activate
 SRC_DIR = web_app
 PYTHON_RUNTIME = python3.8
 TEMPLATE_FILE = api_template.yaml
-ARTIFACT_LOC = build-artifacts
+
+APP_NAME ?= btc-assistant-web-app
+ARTIFACT_LOC ?= build-artifacts
 
 # set up the virtualenvironment
 $(VIRTUALENV_HOME)/.deps:
