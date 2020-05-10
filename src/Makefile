@@ -44,6 +44,10 @@ deploy.worker:
 		--capabilities CAPABILITY_NAMED_IAM
 	rm -f worker.packaged.yml
 
+delete.worker:
+	$(BIN_DIR)/aws cloudformation delete-stack --stack-name ${APP_NAME}-${ENV}
+	$(BIN_DIR)/aws cloudformation wait stack-delete-complete --stack-name ${APP_NAME}-${ENV}
+
 deploy:
 	@$(MAKE) init.env
 	@$(MAKE) build.worker
