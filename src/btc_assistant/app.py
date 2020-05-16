@@ -31,6 +31,6 @@ class WorkerApp:
             data = self.checker.get_btc_day_market_data("USD")
             self.storage.store_record(data)
 
-            return data
+            return "SUCCESS"
 
         return func
