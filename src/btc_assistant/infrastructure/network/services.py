@@ -18,7 +18,7 @@ class BTCPriceChecker:
             raise AttributeError("Must specify either 'aud' or 'usd' currency code")
         url = IndependentReserveUrls.market_data_url("xbt", currency_code.lower())
         a_dict = RESTClient.get(url).json()
-        logger.info("Data retrieved: {}".format(a_dict))
+        logger.info("Data retrieved from Independent Reserve exchange", extra={"payload": a_dict})
         return BitcoinMarketData(
             timestamp=parser.parse(a_dict["CreatedTimestampUtc"]),
             price=a_dict["LastPrice"],
