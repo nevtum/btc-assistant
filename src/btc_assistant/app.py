@@ -10,10 +10,6 @@ logger.setLevel(logging.INFO)
 ENVIRONMENT = environ.get("ENV", "local")
 
 
-def create_price_checker():
-    return BTCPriceChecker()
-
-
 def create_storage():
     logger.info(f"Environment variable ENVIRONMENT is set to {ENVIRONMENT}!")
     if ENVIRONMENT in ("prod", "staging", "test", "local"):
@@ -24,7 +20,7 @@ def create_storage():
 
 class WorkerApp:
     def __init__(self):
-        self.checker = create_price_checker()
+        self.checker = BTCPriceChecker()
         self.storage = create_storage()
 
     def create_handler(self):
