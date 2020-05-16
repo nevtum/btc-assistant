@@ -1,46 +1,6 @@
 from datetime import datetime
 
 
-class CryptoDynamoWriteRecordBuilder:
-    def __init__(self, table_name):
-        self.table_name = table_name
-
-    def at_timestamp(self, timestamp):
-        self.timestamp = timestamp
-        return self
-
-    def ticker_symbol(self, symbol):
-        self.symbol = symbol
-        return self
-
-    def price(self, value):
-        self.price = value
-        return self
-
-    def volume(self, value):
-        self.volume = value
-        return self
-
-    def from_source(self, url):
-        self.url = url
-        return self
-
-    def build_put_kwargs(self):
-        assert isinstance(self.timestamp, datetime)
-        assert self.price >= 0
-        assert self.volume >= 0
-        return {
-            "TableName": self.table_name,
-            "Item": {
-                "ticker_symbol": {"S": self.symbol},
-                "unix_timestamp_utc": {"N": str(self.timestamp.timestamp())},
-                "price": {"S": str(self.price)},
-                "volume": {"S": str(self.volume)},
-                "url": {"S": self.url},
-            },
-        }
-
-
 class CryptoDynamoQueryBuilder:
     def __init__(self, table_name):
         self.table_name = table_name
