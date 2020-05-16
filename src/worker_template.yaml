@@ -43,7 +43,7 @@ Resources:
     Properties: 
       TableName: !Sub crypto-market-data-${Stage}
       AttributeDefinitions: 
-        - AttributeName: symbol
+        - AttributeName: ticker_symbol
           AttributeType: S
         - AttributeName: unix_timestamp_utc
           AttributeType: N
