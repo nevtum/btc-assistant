@@ -1,17 +1,21 @@
-from config import FlaskConfig
-from flask import Flask
+from fastapi import FastAPI
+
+from config import DEBUG
 from presentation import configure_api, configure_app
 
 
-def create_app(namespace):
-    app = Flask(namespace)
-    app.config.from_object(FlaskConfig)
+def create_app():
+    app = FastAPI(debug=DEBUG)
 
     configure_app(app)
     configure_api(app)
     return app
 
-app = create_app(__name__)
 
-if __name__ == '__main__':
-    app.run()
+app = create_app()
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, port=5000)
+    # uvicorn.run("__main__:app", port=5000, reload=True)

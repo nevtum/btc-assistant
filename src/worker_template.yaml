@@ -1,0 +1,71 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Worker service that collects cryptocurrency price data from exchange APIs
+
+Parameters:
+  Application:
+    Description: Name of this service
+    Type: String
+    Default: btc-assistant-price-collector
+  Stage:
+    Description: Application environment
+    Type: String
+    AllowedValues:
+      - prod
+      - staging
+    Default: staging
+
+Globals:
+  Function:
+    Timeout: 30
+    Environment:
+      Variables:
+        LOGLEVEL: INFO
+        ENV: !Ref Stage
+
+Resources:
+  CollectDataFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${Application}-${Stage}
+      CodeUri: btc_assistant/
+      Handler: index.lambda_handler
+      Runtime: python3.8
+      Events:
+        ScheduledEvent:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 minute)
+      Policies:
+        - Statement:
+          - Sid: DynamoLimitedWriteAccessPolicy
+            Effect: Allow
+            Action:
+              - dynamodb:PutItem
+            Resource: !GetAtt DynamoDBTable.Arn
+
+  DynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      TableName: !Sub crypto-market-data-${Stage}
+      AttributeDefinitions: 
+        - AttributeName: ticker_symbol
+          AttributeType: S
+        - AttributeName: unix_timestamp_utc
+          AttributeType: N
+      KeySchema: 
+        - AttributeName: ticker_symbol
+          KeyType: HASH
+        - AttributeName: unix_timestamp_utc
+          KeyType: RANGE
+      ProvisionedThroughput: 
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+Outputs:
+  DynamoTable:
+    Description: The DynamoDB table containing historical crypto price data
+    Value: !GetAtt DynamoDBTable.Arn
+    Export:
+      Name: !Sub ${AWS::StackName}-pricing-table-arn

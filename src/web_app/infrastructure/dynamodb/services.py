@@ -6,6 +6,7 @@ from .builders import CryptoDynamoExpressionBuilder, QueryBuilder
 from .core import execute_query
 from dateutil import parser
 
+
 class BitcoinPriceDTO:
     def __init__(self, a_dict):
         self.data = a_dict
@@ -17,11 +18,15 @@ class BitcoinPriceDTO:
 
     @property
     def value(self):
-        return self.data["price"]["S"]
+        return float(self.data["price"]["S"])
 
     @property
     def volume(self):
-        return self.data["volume"]["S"]
+        return float(self.data["volume"]["S"])
+
+    def as_dict(self):
+        return dict(utc_timestamp=self.utc_timestamp, value=self.value, volume=self.volume)
+
 
 class CryptoMarketDataGateway:
     def __init__(self, table_name, index_name):
@@ -33,9 +38,7 @@ class CryptoMarketDataGateway:
             QueryBuilder(self.table_name, self.index_name)
             .set_batch_size_to(limit)
             .with_query_expression(
-                CryptoDynamoExpressionBuilder()
-                .with_crypto_code("BTC")
-                .since(since_datetime)
+                CryptoDynamoExpressionBuilder().with_crypto_code("BTC").since(since_datetime)
             )
             .build_query_kwargs()
         )

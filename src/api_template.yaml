@@ -1,0 +1,59 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  sam-app
+
+  Sample SAM Template for sam-app
+
+Parameters:
+  Application:
+    Type: String
+    Default: btc-assistant-api
+    Description: Name of application.
+  Stage:
+    Type: String
+    AllowedValues:
+      - prod
+      - staging
+    Default: staging
+
+Globals:
+  Function:
+    Timeout: 30
+
+Resources:
+  CryptoAPIFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Join ["-", [!Ref Application, !Ref Stage]]
+      CodeUri: web_app/
+      Handler: handler.lambda_handler
+      Runtime: python3.8
+      Events:
+        CryptoAPIRoot:
+          Type: Api
+          Properties:
+            Path: /
+            Method: all
+        CryptoAPI:
+          Type: Api
+          Properties:
+            Path: /{+proxy}
+            Method: all
+  DynamoDbIAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Join ["-", [!Ref Application, !Ref Stage]]
+      Policies:
+        - PolicyName: "DynamoDB access"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                - dynamodb:BatchGet*,
+                - dynamodb:DescribeStream,
+                - dynamodb:DescribeTable,
+                - dynamodb:Get",
+                - dynamodb:Query,
+                Resource: !GetAtt DynamoDBTable.Arn
