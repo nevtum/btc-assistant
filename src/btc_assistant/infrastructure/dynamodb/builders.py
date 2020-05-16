@@ -9,6 +9,10 @@ class CryptoDynamoWriteRecordBuilder:
         self.timestamp = timestamp
         return self
 
+    def ticker_symbol(self, symbol):
+        self.symbol = symbol
+        return self
+
     def price(self, value):
         self.price = value
         return self
@@ -28,8 +32,8 @@ class CryptoDynamoWriteRecordBuilder:
         return {
             "TableName": self.table_name,
             "Item": {
-                "utc_timestamp": {"S": self.timestamp.isoformat()},
-                "currency_code": {"S": "BTC"},
+                "ticker_symbol": {"S": self.symbol},
+                "unix_timestamp_utc": {"N": str(self.timestamp.timestamp())},
                 "price": {"S": str(self.price)},
                 "volume": {"S": str(self.volume)},
                 "url": {"S": self.url},

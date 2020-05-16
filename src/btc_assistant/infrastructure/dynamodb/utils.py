@@ -15,7 +15,8 @@ class DynamoDB:
         kwargs = (
             CryptoDynamoWriteRecordBuilder(self.table_name)
             .at_timestamp(data.timestamp)
-            .price(data.last_price)
+            .ticker_symbol(data.symbol)
+            .price(data.price)
             .volume(data.volume)
             .from_source(data.url)
             .build_put_kwargs()
