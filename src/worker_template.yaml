@@ -48,7 +48,7 @@ Resources:
         - AttributeName: unix_timestamp_utc
           AttributeType: N
       KeySchema: 
-        - AttributeName: symbol
+        - AttributeName: ticker_symbol
           KeyType: HASH
         - AttributeName: unix_timestamp_utc
           KeyType: RANGE
