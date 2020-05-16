@@ -5,6 +5,7 @@ from .core import DynamoQueryPaginator, execute_insert
 
 logger = get_logger(__name__)
 
+
 class DynamoDB:
     def __init__(self, table_name):
         self.table_name = table_name
