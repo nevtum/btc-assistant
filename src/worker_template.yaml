@@ -37,6 +37,13 @@ Resources:
           Type: Schedule
           Properties:
             Schedule: rate(1 minute)
+      Policies:
+        - Statement:
+          - Sid: DynamoLimitedWriteAccessPolicy
+            Effect: Allow
+            Action:
+              - dynamodb:PutItem
+            Resource: !GetAtt DynamoDBTable.Arn
 
   DynamoDBTable:
     Type: AWS::DynamoDB::Table
