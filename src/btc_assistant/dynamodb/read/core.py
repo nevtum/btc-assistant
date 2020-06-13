@@ -15,12 +15,6 @@ def execute_query(**kwargs):
     return resp
 
 
-def execute_insert(**kwargs):
-    resp = _client.put_item(ReturnConsumedCapacity="TOTAL", **kwargs)
-    logger.info("Consumed capacity: {}".format(resp["ConsumedCapacity"]))
-    return resp
-
-
 class DynamoQueryPaginator:
     def __init__(self, query_kwargs):
         self.query_kwargs = query_kwargs

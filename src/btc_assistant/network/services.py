@@ -11,8 +11,8 @@ from .urls import IndependentReserveUrls
 logger = get_logger(__name__)
 
 
-class BTCPriceChecker:
-    def get_btc_day_market_data(self, currency_code):
+class CheckBTCPriceData:
+    def __call__(self, currency_code):
         logger.debug("Getting BTC market data from Independent Reserve...")
         if currency_code.lower() not in ["aud", "usd"]:
             raise AttributeError("Must specify either 'aud' or 'usd' currency code")

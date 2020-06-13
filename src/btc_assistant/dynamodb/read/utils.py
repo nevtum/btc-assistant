@@ -1,20 +1,10 @@
-from log import get_logger
-
 from .builders import CryptoDynamoQueryBuilder
-from .core import DynamoQueryPaginator, execute_insert
-
-logger = get_logger(__name__)
+from .core import DynamoQueryPaginator
 
 
-class DynamoDB:
+class DynamoDBReader:
     def __init__(self, table_name):
         self.table_name = table_name
-
-    def store_record(self, data):
-        logger.debug("Attempting to save data to dynamodb table '{}'".format(self.table_name))
-        kwargs = self._build_put_kwargs(data)
-        resp = execute_insert(**kwargs)
-        return resp
 
     def _build_put_kwargs(self, data):
         assert data.price >= 0

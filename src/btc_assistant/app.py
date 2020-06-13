@@ -1,36 +1,39 @@
 import logging
-from os import environ
 
-from infrastructure.dynamodb import DynamoDB
-from infrastructure.network import BTCPriceChecker
+from dynamodb import WriteRecordToDynamoDBCommand
+from network import CheckBTCPriceData
+from storage import SaveRecordToMemoryCommand
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-ENVIRONMENT = environ.get("ENV", "local")
 
+class AppFactory:
+    def __init__(self, env):
+        self.env = env
 
-def create_storage():
-    logger.info(f"Environment variable ENVIRONMENT is set to {ENVIRONMENT}!")
-    if ENVIRONMENT in ("prod", "staging", "test", "local"):
-        return DynamoDB(f"crypto-market-data-{ENVIRONMENT}")
-    else:
-        raise EnvironmentError("Unknown environment set!")
+    def create_handler(self) -> callable:
+        """ Bootstraps and returns a lambda handler """
 
+        get_btc_data = CheckBTCPriceData()
+        store_record = self._bootstrap_save_record_command()
 
-class WorkerApp:
-    def __init__(self):
-        self.checker = BTCPriceChecker()
-        self.storage = create_storage()
-
-    def create_handler(self):
-        def func(event, context):
+        def handler(event, context):
             logger.debug("Event payload: {}".format(event))
             logger.debug("Context: {}".format(context))
 
-            data = self.checker.get_btc_day_market_data("USD")
-            self.storage.store_record(data)
+            data = get_btc_data("USD")
+            store_record(data)
 
             return "SUCCESS"
 
-        return func
+        return handler
+
+    def _bootstrap_save_record_command(self):
+        logger.info(f"Environment variable ENVIRONMENT is set to {self.env}!")
+        if self.env in ("prod", "staging", "test"):
+            return WriteRecordToDynamoDBCommand(f"crypto-market-data-{self.env}")
+        elif self.env in ("local"):
+            return SaveRecordToMemoryCommand()
+        else:
+            raise EnvironmentError("Unknown environment set!")
