@@ -1,5 +1,5 @@
 VIRTUALENV_HOME = .venv
-BIN_DIR = $(VIRTUALENV_HOME)/bin/
+BIN_DIR = $(VIRTUALENV_HOME)/bin
 PYTHON_RUNTIME = python3.8
 PYTHON = $(BIN_DIR)/python
 ENV ?= staging
@@ -18,6 +18,7 @@ init.env:
 	$(PYTHON) -m pip install aws-sam-cli awscli --upgrade
 
 build.worker:
+	$(BIN_DIR)/sam validate --template-file worker_template.yaml && \
 	$(BIN_DIR)/sam build CollectDataFunction -t worker_template.yaml
 
 package.worker:
